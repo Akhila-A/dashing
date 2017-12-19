@@ -1,0 +1,69 @@
+apiVersion: v1
+data:
+  node.rb: |
+    require 'kubeclient'
+
+    config = Kubeclient::Config.read('/root/.kube/config')
+    client=Kubeclient::Client.new(
+    config.context.api_endpoint,
+    config.context.api_version,
+    {
+      ssl_options: config.context.ssl_options,
+      auth_options: config.context.auth_options
+    }
+    )
+    nodeNames = Array.new
+    nodeStatus = Array.new
+    nodeCounts = Hash.new
+    serviceCounts = Hash.new
+    memCounts = Array.new
+
+    SCHEDULER.every '10s' do
+      nodes = client.get_nodes()
+      nodes.each do |node|
+        nodeName = node.metadata.name
+        nodeStat = node.status.conditions[3].status
+        nodeNames.push nodeName
+        nodeStatus.push nodeStat
+        if ( nodeStat == "True" )
+          nodeStatRead = "Running"
+        else
+          nodeStatRead = "Down"
+        end
+        nodeCounts[nodeName] = { label:nodeName, value:nodeStatRead }
+        nodeMemAlloc = node.status.allocatable.memory.to_f
+        nodeMemCap = node.status.capacity.memory.to_f
+        nodeMemAvail = ((nodeMemCap/1000000) - ((nodeMemCap-nodeMemAlloc)/1000000)).round(2)
+        memCounts.push nodeMemAvail
+      end
+      services = client.get_services(namespace: 'renu')
+      services.each do |service|
+        serviceName = service.metadata.name
+        serviceCounts[serviceName] = { label: "ServiceName", value: serviceName }
+      end
+      pods = client.get_pods(namespace: 'renu')
+      numberPods = pods.length
+      File.readlines('/dashing/dashboards/index.erb').each do |line|
+        serviceStatus = Array.new
+        lineName = line.scan(/service-(.*)" data-view/)
+        if ( lineName.any? )
+          lineService = lineName[0]
+          arrow = "icon-ok-sign"
+          color = "green"
+          result = 1
+          w = "service-"+lineService[0]
+          serviceStatus.push({label: lineService[0], value: result, arrow: arrow, color: color})
+          send_event(w, {items: serviceStatus})
+        end
+      end
+      send_event('pods', { value: numberPods })
+      send_event('nodes', { items: nodeCounts.values })
+      send_event('services', { items: serviceCounts.values })
+      send_event('node1', { value: memCounts[0] })
+      send_event('node2', { value: memCounts[1] })
+      send_event('node3', { value: memCounts[2] })
+    end
+
+kind: ConfigMap
+metadata:
+  name: dashing-node

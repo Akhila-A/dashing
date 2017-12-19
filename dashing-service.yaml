@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: dashing
+  name: dashing
+spec:
+  ports:
+    - name: "dashing"
+      port: 3030
+      targetPort: 3030
+  selector:
+    app: dashing-rs
+  type: ClusterIP
+---

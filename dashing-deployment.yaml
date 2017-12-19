@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: dashing-rs
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dashing-rs
+    spec:
+      containers:
+      - name: dashing
+        image: projectethan007/dashing
+        ports:
+          - containerPort: 3030
+        volumeMounts:
+          - name: dashing-config
+            mountPath: /root/.kube
+          - name: dashing-index
+            mountPath: /dashing/dashboards/index.erb
+            subPath: index.erb
+          - name: dashing-node
+            mountPath: /dashing/jobs/node.rb
+            subPath: node.rb
+      volumes:
+        - name: dashing-config
+          configMap:
+            name: dashing-config
+        - name: dashing-index
+          configMap:
+            name: dashing-index
+        - name: dashing-node
+          configMap: 
+            name: dashing-node
