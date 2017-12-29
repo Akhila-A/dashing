@@ -36,12 +36,12 @@ data:
         nodeMemAvail = ((nodeMemCap/1000000) - ((nodeMemCap-nodeMemAlloc)/1000000)).round(2)
         memCounts.push nodeMemAvail
       end
-      services = client.get_services(namespace: 'renu')
+      services = client.get_services(namespace: 'ethan')
       services.each do |service|
         serviceName = service.metadata.name
         serviceCounts[serviceName] = { label: "ServiceName", value: serviceName }
       end
-      pods = client.get_pods(namespace: 'renu')
+      pods = client.get_pods(namespace: 'ethan')
       numberPods = pods.length
       File.readlines('/dashing/dashboards/index.erb').each do |line|
         serviceStatus = Array.new
