@@ -11,21 +11,6 @@ data:
        <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
         <div style="background: linear-gradient(#17EAD9,#6078EA)"; data-id="service-jenkins" data-view="ServerStatus" data-link="/jenkins" data-title="JENKINS"></div>
        </li>
-       <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-        <div style="background: linear-gradient(#a1c4fd,#c2e9fb)"; data-id="service-nexus" data-view="ServerStatus" data-link="/jenkins" data-title="NEXUS"></div>
-       </li>
-       <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-        <div style="background: linear-gradient(#ff758c,#ff7eb3)"; data-id="service-gitlab" data-view="ServerStatus" data-link="/jenkins" data-title="GITLAB"></div>
-       </li>
-       <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-        <div style="background: linear-gradient(#c79081,#dfa579)"; data-id="service-sonar" data-view="ServerStatus" data-link="/jenkins" data-title="SONAR"></div>
-       </li>
-       <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-        <div style="background: linear-gradient(#42275a,#734b6d)"; data-id="service-sensu" data-view="ServerStatus" data-link="/jenkins" data-title="Sensu"></div>
-       </li>
-       <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-        <div style="background: linear-gradient(#56ab2f,#a8e063)"; data-id="service-elk" data-view="ServerStatus" data-link="/jenkins" data-title="ELK"></div>
-       </li>
        <li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
         <div style="background: linear-gradient(#bdc3c7,#2c3e50)"; data-id="nodes" data-unordered="true" data-view="List" data-title="Node Status"></div>
        </li>
