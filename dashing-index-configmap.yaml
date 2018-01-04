@@ -9,16 +9,13 @@ data:
         </div>
        </li>
        <li data-row="2" data-col="1" data-sizex="1" data-sizey="1">
-        <div style="background: linear-gradient(#17EAD9,#6078EA)"; data-id="service-jenkins" data-view="ServerStatus" data-link="/jenkins" data-title="JENKINS"></div>
+        <div style="background: linear-gradient(#17EAD9,#6078EA)"; data-id="service-jenkins" data-view="ServerStatus" data-link="/jenkinscore" data-title="JENKINS CORE"></div>
        </li>
        <li data-row="2" data-col="1" data-sizex="2" data-sizey="1">
         <div style="background: linear-gradient(#bdc3c7,#2c3e50)"; data-id="nodes" data-unordered="true" data-view="List" data-title="Node Status"></div>
        </li>
        <li data-row="3" data-col="1" data-sizex="2" data-sizey="1">
         <div style="background: linear-gradient(#184E68,#57CA86) "; data-id="services" data-unordered="true" data-view="List" data-title="List of Services"></div>
-       </li>
-       <li data-row="3" data-col="1" data-sizex="1" data-sizey="1">
-        <div style="background: linear-gradient(#eb3349,#f45c43)"; data-id="service-ldapadmin" data-view="ServerStatus" data-link="/ldap-phpadmin/" data-title="LDAP"></div>
        </li>
        <li data-row="3" data-col="1" data-sizex="1" data-sizey="1">
         <div style="background: linear-gradient(#184E68,#57CA86)"; data-id="pods" data-view="Meter" data-title="No Of Pods" data-height="200" data-width="200" data-min="0" data-max="25" ></div>
