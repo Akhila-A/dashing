@@ -17,6 +17,7 @@ data:
     nodeCounts = Hash.new
     serviceCounts = Hash.new
     memCounts = Array.new
+    podsPerServiceArray = Array.new
 
     SCHEDULER.every '10s' do
       nodes = client.get_nodes()
@@ -39,10 +40,14 @@ data:
       services = client.get_services(namespace: 'ethan')
       services.each do |service|
         serviceName = service.metadata.name
+        selector = "app="+serviceName
+        podsPerService = client.get_pods(label_selector: selector).length()
+        podsPerServiceArray.push podsPerService
         serviceCounts[serviceName] = { label: "ServiceName", value: serviceName }
       end
       pods = client.get_pods(namespace: 'ethan')
       numberPods = pods.length
+      pod = 0
       File.readlines('/dashing/dashboards/index.erb').each do |line|
         serviceStatus = Array.new
         lineName = line.scan(/service-(.*)" data-view/)
@@ -52,8 +57,9 @@ data:
           color = "green"
           result = 1
           w = "service-"+lineService[0]
-          serviceStatus.push({label: lineService[0], value: result, arrow: arrow, color: color})
+          serviceStatus.push({label: lineService[0], value: result, arrow: arrow, color: color, numpods: podsPerServiceArray[pod] })
           send_event(w, {items: serviceStatus})
+          pod = pod + 1
         end
       end
       send_event('pods', { value: numberPods })
