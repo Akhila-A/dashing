@@ -18,6 +18,8 @@ data:
     serviceCounts = Hash.new
     memCounts = Array.new
     podsPerServiceArray = Array.new
+    arrowArray = Array.new
+    colorArray = Array.new
 
     SCHEDULER.every '10s' do
       nodes = client.get_nodes()
@@ -40,9 +42,6 @@ data:
       services = client.get_services(namespace: 'ethan')
       services.each do |service|
         serviceName = service.metadata.name
-        selector = "app="+serviceName
-        podsPerService = client.get_pods(label_selector: selector).length()
-        podsPerServiceArray.push podsPerService
         serviceCounts[serviceName] = { label: "ServiceName", value: serviceName }
       end
       pods = client.get_pods(namespace: 'ethan')
@@ -53,11 +52,32 @@ data:
         lineName = line.scan(/service-(.*)" data-view/)
         if ( lineName.any? )
           lineService = lineName[0]
-          arrow = "icon-ok-sign"
-          color = "green"
           result = 1
           w = "service-"+lineService[0]
-          serviceStatus.push({label: lineService[0], value: result, arrow: arrow, color: color, numpods: podsPerServiceArray[pod] })
+          selector = "app="+lineService[0]
+          podsPerService = client.get_pods(label_selector: selector).length()
+          allPodsPerSrvc = client.get_pods(label_selector: selector)
+          count = 0
+          allPodsPerSrvc.each do |podsPerSrvc|
+            status = podsPerSrvc.status.phase
+            if ( status == "Running" )
+              count = count + 1
+            end
+          end
+          if ( count == podsPerService )
+            arrow = "icon-ok-sign"
+            color = "green"
+          elsif ( count == 0 )
+            arrow = "icon-remove-sign"
+            color = "red"
+          else
+            arrow = "icon-warning-sign"
+            color = "amber"
+          end
+          arrowArray.push arrow
+          colorArray.push color
+          podsPerServiceArray.push podsPerService
+          serviceStatus.push({label: "Status", value: result, arrow: arrowArray[pod], color: colorArray[pod], numpods: podsPerService })
           send_event(w, {items: serviceStatus})
           pod = pod + 1
         end
