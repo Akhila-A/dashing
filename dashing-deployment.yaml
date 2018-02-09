@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: dashing
-        image: projectethan007/dashing
+        image: projectethan007/dashing:v1-lts
         ports:
           - containerPort: 3030
         volumeMounts:
